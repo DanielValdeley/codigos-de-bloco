@@ -7,9 +7,9 @@ Libs necessárias
 ```
 
 ```shell
-     pip install matplotlib
+    pip install matplotlib
 ```
 
 ```shell
-     pip install komm
+    pip install komm
 ```

@@ -1,0 +1,110 @@
+Desempenho de códigos de bloco
+
+PB = Pr[v^ != v] =
+
+1 - Pr[v^ = v] = 
+
+= 1 - Pr[e = 000000 ou e = 100000 ou ...] ou pode virar uma soma quando for mutualmente exclusivo
+
+então:
+
+= 1 - (Pr[e=000000] + Pr[e=100000] + ... + Pr[e=100100])
+
+PB = 1 - [(1-p)^6 + p(1-p)^5 * 6 + p^2(1-p)^4]
+
+No caso geral:
+
+PB = 1 - somatoria em cima n em baixo w=0 | alfai p^w (1-p)^(n-w)
+
+alfaw é o nº de padrões de erro corrigíveis de peso wi a<=w<=n
+
+-------
+alfa = (1,6,1,0,0,0,0)
+para o código do exemplo.
+
+Ex = BSC(0.01)
+
+celular, jean enviou
+
+Ex2: Hamming(7,4) d=3 t=1
+n=7
+k=4
+        0,1,2,3,4,5,6,7 
+alfa = (1,7,0,0,0,0,0,0)
+
+PB = 1 - [1*(1-p)^7 + 7*p(1-p)^6]
+
+portanto, PB/4 <= Pb <= PB
+
+Fórmula exata:
+
+Pb = 9p²(1-p)⁵ + 19p³(1-p)⁴ + 16 p⁴(1-p)³ +
+12p⁵(1-p)^2 +  7 p^6(1-p) + p^7
+
+
+CANAL AWGN
+----------
+
+Dois métodos
+
+1° HDD: hard-decission decoding
+				z\
+-u->[encoder]-v->[modulacao]-x->(+)-y->[demodulacao]-b->[decodificador]-u^->
+
+Efetivamente, o conjunto Mod+AWGN+Demod equivale a um BSC(p), onde o p é a probabilidade de erro de bit da modulação.
+
+Por exemplo, para BPSK. p=Q(raiz(2Eb'/N0)), onde Eb'=R*Eb
+
+Eb -> energia por bit de informacao
+
+Ex: 
+Hamming(7,4) com BPSK
+
+PB = 1 - [1*(1-p)^7 + 7*p(1-p)^6]
+
+PB/4 <= Pb <= PB    R = k/n = 4/7
+
+
+p = Q(raiz(2REb/N0)) = Q(raiz(8Eb/&N0))
+Obs.: quando não for codificado R = 1, não é esse o caso
+
+Eb/N0 p             Pb           Pb~PB/2     Pb (ñ codificado)
+4 dB  4.51*10^-2    3.67*10^-2   1.84*10^-2  1.25*10^-2 } -- ganho de codificação
+6 dB  1.65*10^-2    5.39*10^-3   2.69*10^-3  2.39*10^-3 }      negativo
+8 dB  3.62*10^-3    2.72*10^-3   1.36*10^-4  1.91*10^-4
+
+$local
+pip install komm
+>>> import komm
+>>> x = 10**(4/10)
+>>> y = 8/7
+>>> z = x*y
+>>> import math
+>>> raiz = math.sqrt(z)
+>>> raiz
+1.6943220916628168
+>>> komm.qfunc(raiz)
+0.04510204743362155
+>>> p = komm.qfunc(raiz)
+>>> print(p)
+0.04510204743362155
+>>> print("{:e}".format(p))
+4.510205e-02
+>>> print(f"{p:e}")
+4.510205e-02
+>>> print(f"{p:f}")
+0.045102
+>>> print(f"{p:.3f}")
+0.045
+>>> print(f"{p:.3e}")
+4.510e-02
+>>> print(f"{p:.3e}")
+4.510e-02
+>>> print(f"{p:.3e}")
+4.510e-02
+
+### formula para PB do SDD
+
+A_d Q(raiz(2_d R Eb/N0)) <= PB <= somatoria(n,w=d) A_w Q(raiz(2 w R Eb/N0))
+|limite inferior--------|   	  |---limite superior----------------------|
+com os limites encontrar o Pb

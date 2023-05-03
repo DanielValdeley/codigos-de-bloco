@@ -32,11 +32,11 @@ print(u_hat)
 # Curca de BER (bit error rate)#
 ################################
 
-Ncw = 10000
+Ncw = 1000
 code = komm.HammingCode(3)
 mod = komm.PSKModulation(2)
 awgn = komm.AWGNChannel()
-EbNo_dB = np.arange(-1.0, 8.0)
+EbNo_dB = np.arange(-1.0, 7.0)
 EbNo = 10.0**(EbNo_dB / 10.0)
 
 (n, k, R) = (code.length, code.dimension, code.rate)
@@ -67,9 +67,48 @@ for gamma in EbNo:
     BER_soft.append(np.mean(np.bitwise_xor(u, u_hat)))
 
 
-plt.semilogy(EbNo_dB, BER_hard)
-plt.semilogy(EbNo_dB, BER_soft)
-plt.semilogy(EbNo_dB, komm.qfunc(np.sqrt(2*EbNo)), 'k--')
-plt.grid()
-plt.ylim(3e-5, 0.2)
-plt.show()
+#plt.semilogy(EbNo_dB, BER_hard)
+#plt.semilogy(EbNo_dB, BER_soft)
+#plt.semilogy(EbNo_dB, komm.qfunc(np.sqrt(2*EbNo)), 'k--')
+#plt.grid()
+#plt.ylim(3e-5, 0.2)
+#plt.show()
+
+#####
+#HDD#
+#####
+
+# Taxa
+R = k/n
+
+x = 2 * R 
+y = EbNo_dB / EbNo
+
+# BPSK
+p = ((x*y) ** 1/2)
+
+p = komm.qfunc(p)
+print(p)
+
+# PB = 1 - [(1-p)^6 + p(1-p)^5 * 6 + p^2(1-p)^4]
+#PB = 1 - ((1-p) ** 6) + ((p * (1-p) ** 5) * 6) + ((p ** 2) * (1-p) ** 4)
+
+# PB = 1 - [1*(1-p)^7 + 7*p(1-p)^6]
+PB = 1 - (1 * (1-p) ** 7) + (7 * p * (1-p) ** 6)
+print(PB)
+
+########################################################################
+#######
+##SDD##
+#######
+alpha = code.coset_leader_weight_distribution
+print(alpha)
+
+A = code.codeword_weight_distribution
+print(A)
+
+### formula para PB do SDD
+
+#A_d Q(raiz(2_d R Eb/N0)) <= PB <= somatoria(n,w=d) A_w Q(raiz(2 w R Eb/N0))
+#|limite inferior--------|   	  |---limite superior----------------------|
+#com os limites encontrar o Pb
