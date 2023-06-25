@@ -32,7 +32,7 @@ print(u_hat)
 # Curca de BER (bit error rate)#
 ################################
 
-Ncw = 1000
+Ncw = 100000
 code = komm.HammingCode(3)
 mod = komm.PSKModulation(2)
 awgn = komm.AWGNChannel()
@@ -67,12 +67,12 @@ for gamma in EbNo:
     BER_soft.append(np.mean(np.bitwise_xor(u, u_hat)))
 
 
-#plt.semilogy(EbNo_dB, BER_hard)
-#plt.semilogy(EbNo_dB, BER_soft)
-#plt.semilogy(EbNo_dB, komm.qfunc(np.sqrt(2*EbNo)), 'k--')
-#plt.grid()
-#plt.ylim(3e-5, 0.2)
-#plt.show()
+plt.semilogy(EbNo_dB, BER_hard)
+plt.semilogy(EbNo_dB, BER_soft)
+plt.semilogy(EbNo_dB, komm.qfunc(np.sqrt(2*EbNo)), 'k--')
+plt.grid()
+plt.ylim(3e-5, 0.2)
+plt.show()
 
 #####
 #HDD#
